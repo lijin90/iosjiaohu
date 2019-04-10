@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+    <title>阵容</title>
+    <link rel="shortcut icon" href="../dist/images/favicon.ico"/>
+    <!--<link rel="stylesheet" href="../css/reset.css">-->
+    <!--<link rel="stylesheet" href="../css/lineup.css">-->
+    <link rel="stylesheet" href="../dist/css/zr.min.css">
+    <style>
+        [v-cloak] {
+            display: none
+        }
+    </style>
+</head>
+<body>
+<!--阵容布局-->
+<div id="app" v-cloak>
+    <div id="zr">
+        <!--<div id="lineup">-->
+            <!--<div id="lineup_frame" :class="{height:heightclass}">-->
+                <!--<div class="up_frame"></div>-->
+                <!--<div class="blue_up">-->
+                    <!--<ul class="team_member menyuan">-->
+                        <!--<li v-for="item in men_blue" @click="openSportMan(item.sports_id)">-->
+                            <!--<a href="javascript:;">-->
+                        <!--<span class="member_number"-->
+                              <!--:class="item.sports_number<10? 'spanl':''">{{item.sports_number}}</span>-->
+                                <!--<img src="../dist/images/lineup/teamplayer_pic1.png" alt="">-->
+                                <!--<p>{{item.sports_name | substr}}</p>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                    <!--<ul class="team_member"-->
+                        <!--:class="{oneteam:hou_blue.length==1,vanguard:hou_blue.length==2,middle:hou_blue.length==3,-->
+                    <!--fourteam:hou_blue.length==4,guard:hou_blue.length==5,six:hou_blue.length==6}">-->
+                        <!--<li v-for="item in hou_blue" @click="openSportMan(item.sports_id)">-->
+                            <!--<a href="javascript:;">-->
+                        <!--<span class="member_number"-->
+                              <!--:class="item.sports_number<10? 'spanl':''">{{item.sports_number}}</span>-->
+                                <!--<img src="../dist/images/lineup/teamplayer_pic1.png" alt="">-->
+                                <!--<p>{{item.sports_name | substr}}</p>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                    <!--<ul class="team_member"-->
+                        <!--:class="{oneteam:center_blue.length==1,vanguard:center_blue.length==2,middle:center_blue.length==3,-->
+                    <!--fourteam:center_blue.length==4,guard:center_blue.length==5,six:center_blue.length==6}">-->
+                        <!--<li v-for="item in center_blue" @click="openSportMan(item.sports_id)">-->
+                            <!--<a href="javascript:;">-->
+                        <!--<span class="member_number"-->
+                              <!--:class="item.sports_number<10? 'spanl':''">{{item.sports_number}}</span>-->
+                                <!--<img src="../dist/images/lineup/teamplayer_pic1.png" alt="">-->
+                                <!--<p>{{item.sports_name | substr}}</p>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                    <!--<ul class="team_member"-->
+                        <!--:class="{oneteam:qian_blue.length==1,vanguard:qian_blue.length==2,middle:qian_blue.length==3,-->
+                    <!--fourteam:qian_blue.length==4,guard:qian_blue.length==5,six:qian_blue.length==6}">-->
+                        <!--<li v-for="item in qian_blue" @click="openSportMan(item.sports_id)">-->
+                            <!--<a href="javascript:;">-->
+                        <!--<span class="member_number"-->
+                              <!--:class="item.sports_number<10? 'spanl':''">{{item.sports_number}}</span>-->
+                                <!--<img src="../dist/images/lineup/teamplayer_pic1.png" alt="">-->
+                                <!--<p>{{item.sports_name | substr}}</p>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                <!--</div>-->
+                <!--<div class="circle"></div>-->
+                <!--<hr class="line">-->
+                <!--<p class="pt" v-if="show">暂无对阵详情</p>-->
+                <!--<div class="red_bottom">-->
+                    <!--<ul class="team_member"-->
+                        <!--:class="{oneteam:qian_red.length==1,vanguard:qian_red.length==2,middle:qian_red.length==3,-->
+                    <!--fourteam:qian_red.length==4,guard:qian_red.length==5,six:qian_red.length==6}">-->
+                        <!--<li v-for="item in qian_red" @click="openSportMan(item.sports_id)">-->
+                            <!--<a href="javascript:;">-->
+                        <!--<span class="member_number"-->
+                              <!--:class="item.sports_number<10? 'spanl':''">{{item.sports_number}}</span>-->
+                                <!--<img src="../dist/images/lineup/teamplayer_pic2.png" alt="">-->
+                                <!--<p>{{item.sports_name | substr}}</p>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                    <!--<ul class="team_member"-->
+                        <!--:class="{oneteam:center_red.length==1,vanguard:center_red.length==2,middle:center_red.length==3,-->
+                    <!--fourteam:center_red.length==4,guard:center_red.length==5,six:center_red.length==6}">-->
+                        <!--<li v-for="item in center_red" @click="openSportMan(item.sports_id)">-->
+                            <!--<a href="javascript:;">-->
+                        <!--<span class="member_number"-->
+                              <!--:class="item.sports_number<10? 'spanl':''">{{item.sports_number}}</span>-->
+                                <!--<img src="../dist/images/lineup/teamplayer_pic2.png" alt="">-->
+                                <!--<p>{{item.sports_name | substr}}</p>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                    <!--<ul class="team_member"-->
+                        <!--:class="{oneteam:hou_red.length==1,vanguard:hou_red.length==2,middle:hou_red.length==3,-->
+                    <!--fourteam:hou_red.length==4,guard:hou_red.length==5,six:hou_red.length==6}">-->
+                        <!--<li v-for="item in hou_red" @click="openSportMan(item.sports_id)">-->
+                            <!--<a href="javascript:;">-->
+                        <!--<span class="member_number"-->
+                              <!--:class="item.sports_number<10? 'spanl':''">{{item.sports_number}}</span>-->
+                                <!--<img src="../dist/images/lineup/teamplayer_pic2.png" alt="">-->
+                                <!--<p>{{item.sports_name | substr}}</p>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                    <!--<ul class="team_member menyuan">-->
+                        <!--<li v-for="item in men_red" @click="openSportMan(item.sports_id)">-->
+                            <!--<a href="javascript:;">-->
+                        <!--<span class="member_number"-->
+                              <!--:class="item.sports_number<10? 'spanl':''">{{item.sports_number}}</span>-->
+                                <!--<img src="../dist/images/lineup/teamplayer_pic2.png" alt="">-->
+                                <!--<p>{{item.sports_name | substr}}</p>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                <!--</div>-->
+                <!--<div class="foot_frame"></div>-->
+            <!--</div>-->
+        <!--</div>-->
+        <div id="alternate">
+            <div class="alternate_title">
+                <h2>首发阵容</h2>
+            </div>
+            <div class="alternate_list" v-if="blues.length>0">
+                <div class="member_list clearfix">
+                    <ul class="zhu">
+                        <li v-for="item in blues" @click="openSportMan(item.sports_id);OcopenSportMan(item.sports_id)">
+                            <div class="alternate_list_map">
+                                <img src="../dist/images/lineup/teamplayer_pic1.png" alt="">
+                                <span class="member_number" :class="item.sports_number<10 ? 'spanl':''">{{item.sports_number}}</span>
+                            </div>
+                            <span class="member_name">{{item.sports_name}}</span>
+                        </li>
+                    </ul>
+                    <ul class="ke">
+                        <li v-for="item in reds" @click="openSportMan(item.sports_id);OcopenSportMan(item.sports_id)">
+                            <div class="alternate_list_map">
+                                <img src="../dist/images/lineup/teamplayer_pic2.png" alt="">
+                                <span class="member_number" :class="item.sports_number<10 ? 'spanl':''">{{item.sports_number}}</span>
+                            </div>
+                            <span class="member_name">{{item.sports_name}}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pt" v-else>{{empty}}</div>
+            <div class="alternate_title">
+                <h2>替补阵容</h2>
+            </div>
+            <div class="alternate_list" v-if="bluet.length>0">
+                <div class="member_list clearfix">
+                    <ul class="zhu">
+                        <li v-for="item in bluet" @click="openSportMan(item.sports_id);OcopenSportMan(item.sports_id)">
+                            <div class="alternate_list_map">
+                                <img src="../dist/images/lineup/teamplayer_pic1.png" alt="">
+                                <span class="member_number" :class="item.sports_number<10 ? 'spanl':''">{{item.sports_number}}</span>
+                            </div>
+                            <span class="member_name">{{item.sports_name}}</span>
+                        </li>
+                    </ul>
+                    <ul class="ke">
+                        <li v-for="item in redt" @click="openSportMan(item.sports_id);OcopenSportMan(item.sports_id)">
+                            <div class="alternate_list_map">
+                                <img src="../dist/images/lineup/teamplayer_pic2.png" alt="">
+                                <span class="member_number" :class="item.sports_number<10 ? 'spanl':''">{{item.sports_number}}</span>
+                            </div>
+                            <span class="member_name">{{item.sports_name}}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pt" v-else>{{empty}}</div>
+        </div>
+    </div>
+</div>
+<script src="../dist/js/zr.min.js"></script>
+<!--<script src="../js/jquery-3.2.1.min.js"></script>-->
+<!--<script src="../js/phone_rem.js"></script>-->
+<!--<script src="../js/vue.min.js"></script>-->
+<!--<script src="../js/axios.min.js"></script>-->
+<!--<script src="../js/lineup.js"></script>-->
+</body>
+</html>

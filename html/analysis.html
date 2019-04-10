@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+    <title>分析</title>
+    <style>
+        [v-cloak] {
+            display: none
+        }
+    </style>
+    <link rel="shortcut icon" href="../dist/images/favicon.ico"/>
+    <!--<link rel="stylesheet" href="../css/reset.css">-->
+    <!--<link rel="stylesheet" href="../css/analysis.css">-->
+    <link rel="stylesheet" href="../dist/css/fenxi.min.css">
+</head>
+<body>
+<div id="analysis" v-cloak>
+    <div>
+        <div v-if="tpprice.length!=0" v-for="item in tpprice">
+            <div class="analysis_title">
+                <h2>智能锦囊</h2>
+            </div>
+            <div class="analysis_picture">
+                <div class="analysis_picture_con clearfix"
+                     :class="{tp1:item._a==1,tp2:item._a==2,tp3:item._a==3,tp4:item._a==4,tp6:item._a==6,tp7:item._a==7,tp8:item._a==8,tp10:item._a==10,tp11:item._a==11,tp15:item._a==15,tp16:item._a==16,tp19:item._a==19}"
+                     @click="openTips();OcopenTips(location.href.split('=')[1])">
+                    <div class="fr ai_wenzi">
+                        <h1>全国首家AI智能分析决策系统</h1>
+                        <p>不中退还锦囊价款</p>
+                        <span>{{item._p}}查看</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div v-if="wji.length>0">
+                <div class="analysis_title">
+                    <h2>对赛往绩</h2>
+                </div>
+                <div>
+                    <ul class="clash_team clearfix">
+                        <li v-text="toutitle[0]"></li>
+                        <li v-text="names[1]"></li>
+                        <li v-text="toutitle[1]"></li>
+                    </ul>
+                    <ul class="score clearfix">
+                        <li v-for="item,index in vic"
+                            :class="[index==0?'home_score':'',index==2?'guest_score':'',index==1?'draw':'']">
+                            <a v-text="item"></a></li>
+                    </ul>
+                    <div class="score_list">
+                        <table border="1">
+                            <tr>
+                                <th>日期</th>
+                                <th>赛事</th>
+                                <th>主队</th>
+                                <th>比分</th>
+                                <th>客队</th>
+                            </tr>
+                            <tr v-for="item in wji" @click="openSeason(item.season_id);OcopenSeason(item.season_id)">
+                                <td>{{item.play_year}}/{{item.play_month}}</td>
+                                <td>{{item.lea_name}}</td>
+                                <td v-if="toutitle[0]==item.team_a" :class="{red:item.source_a>item.source_b,block:item.source_a==item.source_b,
+                            blue:item.source_a<item.source_b}">{{item.team_a | substr}}
+                                </td>
+                                <td v-else>{{item.team_a | substr}}</td>
+                                <td v-if="toutitle[0]==item.team_a"><span
+                                        :class="{red_bg:item.source_a>item.source_b,
+                                    blue_bg:item.source_a<item.source_b, block_bg:item.source_a==item.source_b,
+                                 }">{{item.source_a}}-{{item.source_b}}</span>
+                                </td>
+                                <td v-else="toutitle[0]==item.team_b"><span
+                                        :class="{blue_bg:item.source_a>item.source_b,red_bg:item.source_a<item.source_b,
+                                 block_bg:item.source_a==item.source_b,}">{{item.source_a}}-{{item.source_b}}</span>
+                                </td>
+                                <td v-if="toutitle[0]==item.team_b" :class="{blue:item.source_a>item.source_b,block:item.source_a==item.source_b,
+                               red:item.source_a<item.source_b}">{{item.team_b | substr}}
+                                </td>
+                                <td v-else>{{item.team_b | substr}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!--<div v-else class="no_request">暂无对阵往绩</div>-->
+            <div v-if="oupei.length>0||yapan.length>0">
+                <div class="analysis_title clearfix">
+                    <h2 class="fl">盘口指数</h2>
+                </div>
+                <div class="peilv">
+                    <div class="liansai_score">
+                        <h2>亚盘</h2>
+                    </div>
+                    <div class="score_list">
+                        <table border="1">
+                            <tr>
+                                <th>公司</th>
+                                <th>类型</th>
+                                <th>主赔</th>
+                                <th>让球</th>
+                                <th>客赔</th>
+                                <th>变化时间</th>
+                            </tr>
+                            <tbody v-for="item in yapan">
+                            <tr @click="openSeason(item.lottery_id);OcopenOdds()">
+                                <td rowspan="2">{{item.type_name}}</td>
+                                <td :class="{active:red}">即时</td>
+                                <td>{{item.lottery_win}}</td>
+                                <td>{{item.lottery_deuce}}</td>
+                                <td>{{item.lottery_lose}}</td>
+                                <td rowspan="2">{{item.change_time}}</td>
+                            </tr>
+                            <tr @click="openSeason(item.lottery_id);OcopenOdds()">
+                                <td style="text-align: center">初盘</td>
+                                <td>{{item.final_win}}</td>
+                                <td>{{item.final_deuce}}</td>
+                                <td>{{item.final_lose}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="liansai_score">
+                        <h2>欧赔</h2>
+                    </div>
+                    <div class="score_list">
+                        <table border="1">
+                            <tr>
+                                <th>公司</th>
+                                <th>类型</th>
+                                <th>主胜</th>
+                                <th>平</th>
+                                <th>客胜</th>
+                                <th>变化时间</th>
+                            </tr>
+                            <tbody v-for="item in oupei">
+                            <tr @click="openSeason(item.lottery_id);OcopenOdds()">
+                                <td rowspan="2">{{item.type_name}}</td>
+                                <td :class="{active:red}">即时</td>
+                                <td>{{item.lottery_win}}</td>
+                                <td>{{item.lottery_deuce}}</td>
+                                <td>{{item.lottery_lose}}</td>
+                                <td rowspan="2">{{item.change_time}}</td>
+                            </tr>
+                            <tr @click="openSeason(item.lottery_id);OcopenOdds()">
+                                <td style="text-align: center">初盘</td>
+                                <td>{{item.final_win}}</td>
+                                <td>{{item.final_deuce}}</td>
+                                <td>{{item.final_lose}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="saiji" v-if="rankA.length>0||rankB.length>0">
+                <div class="analysis_title">
+                    <h2>联赛积分榜</h2>
+                </div>
+                <div class="liansai_score clearfix" @click="openTeam(namesid[0]);OcopenTeam(namesid[0])">
+                    <div v-if="touicon[0]!= ''" class="fl">
+                        <img :src="touicon[0]" alt="">
+                    </div>
+                    <div v-else class="fl">
+                        <img src="../dist/images/lineup/default1.png" alt="">
+                    </div>
+                    <h2 class="fl">{{toutitle[0]}}</h2>
+                </div>
+                <div class="score_list" v-if="rankA.length>0">
+                    <table border="1">
+                        <tr>
+                            <th>类型</th>
+                            <th>场次</th>
+                            <th>胜</th>
+                            <th>平</th>
+                            <th>负</th>
+                            <th>进/失球</th>
+                            <th>积</th>
+                            <th>排名</th>
+                            <th>胜率</th>
+                        </tr>
+                        <tr v-for="item in rankA">
+                            <td v-if="item.type_id==1">总</td>
+                            <td v-else-if="item.type_id==37">主</td>
+                            <td v-else-if="item.type_id==38">客</td>
+                            <td>{{item.item_count}}</td>
+                            <td>{{item.item_vicotry}}</td>
+                            <td>{{item.item_deuce}}</td>
+                            <td>{{item.item_lose}}</td>
+                            <td>{{item.item_in}}/{{item.item_out}}</td>
+                            <td>{{item.item_source}}</td>
+                            <td>{{paiming[0]}}</td>
+                            <td>{{item.item_vicotry/item.item_count|number }}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="liansai_score clearfix" @click="openTeam(namesid[1]);OcopenTeam(namesid[1])">
+                    <div v-if="touicon[1]!= ''" class="fl">
+                        <img :src="touicon[1]" alt="">
+                    </div>
+                    <div v-else class="fl">
+                        <img src="../dist/images/lineup/default1.png" alt="">
+                    </div>
+
+                    <h2 class="fl">{{toutitle[1]}}</h2>
+                </div>
+                <div class="score_list" v-if="rankB.length>0">
+                    <table border="1">
+                        <tr>
+                            <th>类型</th>
+                            <th>场次</th>
+                            <th>胜</th>
+                            <th>平</th>
+                            <th>负</th>
+                            <th>进/失球</th>
+                            <th>积</th>
+                            <th>排名</th>
+                            <th>胜率</th>
+                        </tr>
+                        <tr v-for="item in rankB">
+                            <td v-if="item.type_id==1">总</td>
+                            <td v-else-if="item.type_id==37">主</td>
+                            <td v-else-if="item.type_id==38">客</td>
+                            <td>{{item.item_count}}</td>
+                            <td>{{item.item_vicotry}}</td>
+                            <td>{{item.item_deuce}}</td>
+                            <td>{{item.item_lose}}</td>
+                            <td>{{item.item_in}}/{{item.item_out}}</td>
+                            <td>{{item.item_source}}</td>
+                            <td>{{paiming[1]}}</td>
+                            <td>{{item.item_vicotry/item.item_count|number }}</td>
+                    </table>
+                </div>
+            </div>
+            <div class="analysis_title">
+                <h2>近期战绩</h2>
+            </div>
+            <div class="near">
+                <div class="liansai_score clearfix" @click="openTeam(namesid[0]);OcopenTeam(namesid[0])">
+                    <div v-if="touicon[0]!= ''" class="fl">
+                        <img :src="touicon[0]" alt="">
+                    </div>
+                    <div v-else class="fl">
+                        <img src="../dist/images/lineup/default1.png" alt="">
+                    </div>
+                    <h2 class="fl">{{toutitle[0]}}</h2>
+                </div>
+                <div v-if="teamA.length>0">
+                    <div class="score_list">
+                        <table border="1">
+                            <thead>
+                            <tr>
+                                <th>日期</th>
+                                <th>赛事</th>
+                                <th>主队</th>
+                                <th>比分</th>
+                                <th>客队</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="item in teamA" @click="openSeason(item.season_id);OcopenSeason(item.season_id)">
+                                <td>{{item.play_year}} {{item.play_month}}</td>
+                                <td>{{item.lea_name}}</td>
+                                <td v-if="toutitle[0]==item.team_a" :class="{red:item.source_a>item.source_b,block:item.source_a==item.source_b,
+                            blue:item.source_a<item.source_b}">{{item.team_a | substr}}
+                                </td>
+                                <td v-else>{{item.team_a | substr}}</td>
+                                <td v-if="toutitle[0]==item.team_a"><span
+                                        :class="{red_bg:item.source_a>item.source_b,
+                                    blue_bg:item.source_a<item.source_b, block_bg:item.source_a==item.source_b,
+                                 }">{{item.source_a}}-{{item.source_b}}</span>
+                                </td>
+                                <td v-else="toutitle[0]==item.team_b"><span
+                                        :class="{blue_bg:item.source_a>item.source_b,red_bg:item.source_a<item.source_b,
+                                 block_bg:item.source_a==item.source_b,}">{{item.source_a}}-{{item.source_b}}</span>
+                                </td>
+                                <td v-if="toutitle[0]==item.team_b" :class="{blue:item.source_a>item.source_b,block:item.source_a==item.source_b,
+                               red:item.source_a<item.source_b}">{{item.team_b | substr}}
+                                </td>
+                                <td v-else>{{item.team_b | substr}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div v-else class="no_request">暂无近期战绩</div>
+                <div class="liansai_score clearfix" @click="openTeam(namesid[1]);OcopenTeam(namesid[1])">
+                    <div v-if="touicon[1]!= ''" class="fl">
+                        <img :src="touicon[1]" alt="">
+                    </div>
+                    <div v-else class="fl">
+                        <img src="../dist/images/lineup/default1.png" alt="">
+                    </div>
+                    <h2 class="fl" v-text="toutitle[1]"></h2>
+                </div>
+                <div v-if="teamB.length>0">
+                    <div class="score_list">
+                        <table border="1">
+                            <thead>
+                            <tr>
+                                <th>日期</th>
+                                <th>赛事</th>
+                                <th>主队</th>
+                                <th>比分</th>
+                                <th>客队</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="item in teamB" @click="openSeason(item.season_id);OcopenSeason(item.season_id)">
+                                <td>{{item.play_year}} {{item.play_month}}</td>
+                                <td>{{item.lea_name}}</td>
+                                <td v-if="toutitle[1]==item.team_a" :class="{red:item.source_a>item.source_b,block:item.source_a==item.source_b,
+                            blue:item.source_a<item.source_b}">{{item.team_a | substr}}
+                                </td>
+                                <td v-else>{{item.team_a | substr}}</td>
+                                <td v-if="toutitle[1]==item.team_a"><span
+                                        :class="{red_bg:item.source_a>item.source_b,blue_bg:item.source_a<item.source_b,
+                                    block_bg:item.source_a==item.source_b}">{{item.source_a}}-{{item.source_b}}</span>
+                                </td>
+                                <td v-else="toutitle[1]==item.team_b"><span
+                                        :class="{blue_bg:item.source_a>item.source_b,red_bg:item.source_a<item.source_b,
+                                    block_bg:item.source_a==item.source_b}">{{item.source_a}}-{{item.source_b}}</span>
+                                </td>
+                                <td v-if="toutitle[1]==item.team_b" :class="{blue:item.source_a>item.source_b,block:item.source_a==item.source_b,
+                            red:item.source_a<item.source_b}">{{item.team_b | substr}}
+                                </td>
+                                <td v-else>{{item.team_b | substr}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div v-else class="no_request">暂无近期战绩</div>
+            </div>
+            <div class="near">
+                <div class="analysis_title">
+                    <h2>未来三场</h2>
+                </div>
+                <div class="liansai_score clearfix" @click="openTeam(namesid[0]);OcopenTeam(namesid[0])">
+                    <div v-if="touicon[0]!= ''" class="fl">
+                        <img :src="touicon[0]" alt="">
+                    </div>
+                    <div v-else class="fl">
+                        <img src="../dist/images/lineup/default1.png" alt="">
+                    </div>
+                    <h2 class="fl">{{toutitle[0]}}</h2>
+                </div>
+                <div v-if="wlA.length>0">
+                    <div class="score_list">
+                        <table border="1">
+                            <thead>
+                            <tr>
+                                <th>日期</th>
+                                <th>赛事</th>
+                                <th>主队</th>
+                                <th>比分</th>
+                                <th>客队</th>
+                            </tr>
+                            </thead>
+                            <tr v-for="item in wlA" @click="openSeason(item.season_id);OcopenSeason(item.season_id)">
+                                <td>{{item.play_year}} {{item.play_month}}</td>
+                                <td>{{item.lea_name}}</td>
+                                <td>{{item.team_a | substr}}</td>
+                                <td><span class="defult">{{item.source_a}}-{{item.source_b}}</span></td>
+                                <td>{{item.team_b | substr}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div v-else class="no_request">暂无未来战绩</div>
+                <div class="liansai_score clearfix" @click="openTeam(namesid[1]);OcopenTeam(namesid[1])">
+                    <div v-if="touicon[1]!= ''" class="fl">
+                        <img :src="touicon[1]" alt="">
+                    </div>
+                    <div v-else class="fl">
+                        <img src="../dist/images/lineup/default1.png" alt="">
+                    </div>
+
+                    <h2 class="fl" v-text="toutitle[1]"></h2>
+                </div>
+                <div v-if="wlB.length>0">
+                    <div class="score_list">
+                        <table border="1">
+                            <thead>
+                            <tr>
+                                <th>日期</th>
+                                <th>赛事</th>
+                                <th>主队</th>
+                                <th>比分</th>
+                                <th>客队</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="item in wlB" @click="openSeason(item.season_id);OcopenSeason(item.season_id)">
+                                <td>{{item.play_year}} {{item.play_month}}</td>
+                                <td>{{item.lea_name}}</td>
+                                <td>{{item.team_a | substr}}</td>
+                                <td><span class="defult">{{item.source_a}}-{{item.source_b}}</span></td>
+                                <td>{{item.team_b | substr}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div v-else class="no_request">暂无未来战绩</div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../dist/js/fenxi.min.js"></script>
+<!--<script src="../js/jquery-3.2.1.min.js"></script>-->
+<!--<script src="../js/phone_rem.js"></script>-->
+<!--<script src="../js/vue.min.js"></script>-->
+<!--<script src="../js/axios.min.js"></script>-->
+<!--<script src="../js/analysis.js"></script>-->
+</body>
+</html>

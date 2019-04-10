@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport"/>
+    <title>数据</title>
+    <link rel="shortcut icon" href="../dist/images/favicon.ico"/>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/data_list.css">
+    <link rel="stylesheet" href="../css/mobileSelect.css">
+    <!--<link rel="stylesheet" href="../dist/css/data_list.min.css">-->
+    <style>
+        [v-cloak] {
+            display: none
+        }
+    </style>
+</head>
+<body>
+<div id="data_list" v-cloak>
+    <div id="data_list_title" class="clearfix">
+        <div class="data_list_time fl clearfix">
+            <span class="fl" id="time_select">{{timevalue[0]}}</span>
+        </div>
+        <ul class="clearfix data_list_select fl">
+            <li v-for="(item,index) in data_list_select" :class="{active:index==num}" @click="tab(index)">
+                <span>{{item}}</span>
+            </li>
+        </ul>
+    </div>
+    <div>
+        <div class="data_list_con">
+            <div class="clearfix data_change show">
+                <div class="data_schedule">
+                    <ul class="data_schedule_select clearfix">
+                        <li id="prev">
+                            <a @click="upTurn()">上一轮</a>
+                        </li>
+                        <li id="changci">
+                            <div id="turn_select_P1">
+
+                            </div>
+                        </li>
+                        <li id="next">
+                            <a @click="downTurn()">下一轮</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="team_over">
+                    <table v-if="saicheng.length>0">
+                        <tr v-for="item in seasons" @click="openSeason(item.season_id);OcopenSeason(item.season_id)">
+                            <td> {{item.pt}}</td>
+                            <td> {{item.a|substr}}</td>
+                            <td><img :src="item.a_icon" alt=""></td>
+                            <!--<td>VS</td>-->
+                            <td v-if="item.status_id==4"><i :class="{red_bg:item.fa>item.fb,blue_bg:item.fa==item.fb,
+                            block_bg:item.fa<item.fb}" v-if="item.status_id==4">{{item.fa}}-{{item.fb}}</i></td>
+                            <td v-else>VS</td>
+                            <td><img :src="item.b_icon" alt=""></td>
+                            <td> {{item.b |substr }}</td>
+                        </tr>
+                    </table>
+                    <table v-else>
+                        <tr style="border: none;">
+                            <td>
+                                {{scempty}}
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+            <div class="clearfix data_change">
+                <div class="jifen">
+                    <table v-if="jifenList.length>0">
+                        <!--<th>{{header[0]}}</th>-->
+                        <th>{{header[1]}}</th>
+                        <th>{{header[2]}}</th>
+                        <th>{{header[3]}}</th>
+                        <th>{{header[4]}}</th>
+                        <th>{{header[5]}}</th>
+                        <th>{{header[6]}}</th>
+                        <th>{{header[7]}}</th>
+                        <tr class="" v-for="(item,index) in jifenList"
+                            @click="openTeam(item.team_id);OcopenTeam(item.team_id)">
+                            <!--<td>{{index+1}}</td>-->
+                            <td>
+                            <span>
+                                <i>{{index+1}}</i>
+                                <img :src="item.team_icon" alt="">
+                                <span>{{item.team_name|substr}}</span>
+                            </span>
+                            </td>
+                            <td><span>{{item.item_count}}</span></td>
+                            <td><span>{{item.item_vicotry}}</span></td>
+                            <td><span>{{item.item_deuce}}</span></td>
+                            <td><span>{{item.item_lose}}</span></td>
+                            <td><span>{{item.item_in}}/{{item.item_out}}</span></td>
+                            <td><span>{{item.item_source}}</span></td>
+                        </tr>
+                    </table>
+                    <table v-else>
+                        <tr>
+                            <th>{{jfempty}}</th>
+                        </tr>
+                    </table>
+                    <div class="table_status" :class="state==''?'wbg':''">
+                        <p>{{state}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix data_change">
+                <div class="qiuyuan">
+                    <div class="qiuyuan_she">射手榜</div>
+                    <table v-if="shotList.length>0">
+                        <th>球员</th>
+                        <th>进球</th>
+                        <th>场均进球</th>
+                        <tr class="" v-for="item in shotList">
+                            <td>
+                                <i>{{item.index}}</i>
+                                <img v-if="item.sports_img!=''" :src="item.sports_img" alt="">
+                                <img v-else src="../dist/images/lineup/default1.png" alt="">
+                                <span>{{item.sports_name |substr}}</span>
+                            </td>
+                            <td><span>{{item.item_count}}</span></td>
+                            <td><span>{{item.item_avg_vicotry}}</span></td>
+                        </tr>
+                    </table>
+                    <table v-else>
+                        <tr>
+                            <th>{{shempty}}</th>
+                        </tr>
+                    </table>
+                    <div class="qiuyuan_she">助攻榜</div>
+                    <table v-if="helpList.length>0">
+                        <th>球员</th>
+                        <th>助攻</th>
+                        <th>场均助攻</th>
+                        <tr class="" v-for="item in helpList">
+                            <td>
+                                <i>{{item.index}}</i>
+                                <img v-if="item.sports_img!=''" :src="item.sports_img" alt="">
+                                <img v-else src="../dist/images/lineup/default1.png" alt="">
+                                <span>{{item.sports_name|substr}}</span>
+                            </td>
+                            <td><span>{{item.item_count}}</span></td>
+                            <td><span>{{item.item_avg_vicotry}}</span></td>
+                        </tr>
+                    </table>
+                    <table v-else>
+                        <tr style="border: none;">
+                            <th>{{zgempty}}</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <!--<div class="clearfix data_change">-->
+                <!--<div id="world_cup">-->
+                    <!--<h1 class="title">小组赛</h1>-->
+                    <!--<h1>A组</h1>-->
+                    <!--<table>-->
+                        <!--<thead>-->
+                        <!--<tr>-->
+                            <!--<th>球队</th>-->
+                            <!--<th>赛</th>-->
+                            <!--<th>胜</th>-->
+                            <!--<th>平</th>-->
+                            <!--<th>负</th>-->
+                            <!--<th>近/失</th>-->
+                            <!--<th>积分</th>-->
+                        <!--</tr>-->
+                        <!--</thead>-->
+                        <!--<tbody>-->
+                        <!--<tr>-->
+                            <!--<td>-->
+                                <!--<i>1</i>-->
+                                <!--<img src="http://liansai.500.com/static/soccerdata/images/TeamPic/teamsignnew_1137.png"-->
+                                     <!--alt="">-->
+                                <!--<span>纽卡斯尔联</span>-->
+                            <!--</td>-->
+                            <!--<td>10</td>-->
+                            <!--<td>1</td>-->
+                            <!--<td>1</td>-->
+                            <!--<td>1</td>-->
+                            <!--<td>17/18</td>-->
+                            <!--<td>1</td>-->
+                        <!--</tr>-->
+                        <!--<tr>-->
+                            <!--<td>-->
+                                <!--<i>1</i>-->
+                                <!--<img src="http://liansai.500.com/static/soccerdata/images/TeamPic/teamsignnew_1137.png"-->
+                                     <!--alt="">-->
+                                <!--<span>纽卡斯尔联</span>-->
+                            <!--</td>-->
+                            <!--<td>10</td>-->
+                            <!--<td>1</td>-->
+                            <!--<td>1</td>-->
+                            <!--<td>1</td>-->
+                            <!--<td>17/18</td>-->
+                            <!--<td>1</td>-->
+                        <!--</tr>-->
+                        <!--<tr>-->
+                            <!--<td>-->
+                                <!--<i>1</i>-->
+                                <!--<img src="http://liansai.500.com/static/soccerdata/images/TeamPic/teamsignnew_1137.png"-->
+                                     <!--alt="">-->
+                                <!--<span>纽卡斯尔联</span>-->
+                            <!--</td>-->
+                            <!--<td>10</td>-->
+                            <!--<td>1</td>-->
+                            <!--<td>1</td>-->
+                            <!--<td>1</td>-->
+                            <!--<td>17/18</td>-->
+                            <!--<td>1</td>-->
+                        <!--</tr>-->
+                        <!--</tbody>-->
+
+                    <!--</table>-->
+                    <!--<h1>B组</h1>-->
+                    <!--<table>-->
+                        <!--<thead>-->
+                        <!--<tr>-->
+                            <!--<th>球队</th>-->
+                            <!--<th>赛</th>-->
+                            <!--<th>胜</th>-->
+                            <!--<th>平</th>-->
+                            <!--<th>负</th>-->
+                            <!--<th>近/失</th>-->
+                            <!--<th>积分</th>-->
+                        <!--</tr>-->
+                        <!--</thead>-->
+                        <!--<tbody>-->
+                        <!--<tr>-->
+                            <!--<td>-->
+                                <!--<i>1</i>-->
+                                <!--<img src="http://liansai.500.com/static/soccerdata/images/TeamPic/teamsignnew_1137.png"-->
+                                     <!--alt="">-->
+                                <!--<span>纽卡斯尔联</span>-->
+                            <!--</td>-->
+                            <!--<td>10</td>-->
+                            <!--<td>1</td>-->
+                            <!--<td>1</td>-->
+                            <!--<td>1</td>-->
+                            <!--<td>17/18</td>-->
+                            <!--<td>1</td>-->
+                        <!--</tr>-->
+                        <!--<tr>-->
+                            <!--<td>-->
+                                <!--<i>1</i>-->
+                                <!--<img src="http://liansai.500.com/static/soccerdata/images/TeamPic/teamsignnew_1137.png"-->
+                                     <!--alt="">-->
+                                <!--<span>纽卡斯尔联</span>-->
+                            <!--</td>-->
+                            <!--<td>10</td>-->
+                            <!--<td>1</td>-->
+                            <!--<td>1</td>-->
+                            <!--<td>1</td>-->
+                            <!--<td>17/18</td>-->
+                            <!--<td>1</td>-->
+                        <!--</tr>-->
+                        <!--<tr>-->
+                            <!--<td>-->
+                                <!--<i>1</i>-->
+                                <!--<img src="http://liansai.500.com/static/soccerdata/images/TeamPic/teamsignnew_1137.png"-->
+                                     <!--alt="">-->
+                                <!--<span>纽卡斯尔联</span>-->
+                            <!--</td>-->
+                            <!--<td>10</td>-->
+                            <!--<td>1</td>-->
+                            <!--<td>1</td>-->
+                            <!--<td>1</td>-->
+                            <!--<td>17/18</td>-->
+                            <!--<td>1</td>-->
+                        <!--</tr>-->
+                        <!--</tbody>-->
+
+                    <!--</table>-->
+                <!--</div>-->
+            <!--</div>-->
+        </div>
+    </div>
+</div>
+<!--<script src="../dist/js/data_list.min.js"></script>-->
+<script src="../js/jquery-3.2.1.min.js"></script>
+<script src="../js/phone_rem.js"></script>
+<script src="../js/vue.min.js"></script>
+<script src="../js/mobileSelect.js"></script>
+<script src="../js/axios.min.js"></script>
+<script src="../js/data_list.js"></script>
+</body>
+</html>
